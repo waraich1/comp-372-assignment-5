@@ -7,7 +7,7 @@ def gen_random(n):
   return random.randint(0,n-1)
 
 
-def approximate_vertex(E):
+def approximate_vertex(E,minK):
     C = []
     E_tag = E.copy()
     while len(E_tag) > 0:
@@ -17,7 +17,8 @@ def approximate_vertex(E):
         for e in E_tag:
             if e[0] in C or e[1] in C:
                 E_tag.remove(e)
-    return len(C)
+    res = len(C)
+    return [C,res < minK] 
 
 def get_edges(adj_matrix):
     edges = []
@@ -32,9 +33,13 @@ graphs = Graph.make_graphs()
 vertex_cover = []
 for g in graphs:
   edges = get_edges(g.cover_graph)
-  vertex_cover.append(approximate_vertex(edges))
+  minK = random.randint(0,15)
+  vertex_cover.append(approximate_vertex(edges,minK))
+  if not vertex_cover[-1][1]:
+    print("The value vertex cover is more than k"+" = " + str(minK))
+  else:
+    print("The value vertex cover is less than k"+" = " + str(minK)+ " "+"with vertex cover  " + str(vertex_cover[-1][0]))
 end = time.time()
-print(vertex_cover)
 print(f"run took {end-start} seconds")
 
 
